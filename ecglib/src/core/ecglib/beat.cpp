@@ -25,6 +25,7 @@
 #include <ecglib/detail/detail.hpp>
 
 #include <cassert>
+#include <cstdlib>
 
 namespace ecglib { 
 
@@ -162,7 +163,7 @@ namespace ecglib {
 								}
 							} else {
 								ok = true;
-								curdiff = abs(pi->first - beats[i].rpeak);
+								curdiff = abs((int)(pi->first - beats[i].rpeak));
 							}
 						}
 

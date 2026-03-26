@@ -621,9 +621,16 @@ void delineate::smoothWaveFunc(arma::rowvec& wave, int windowSize){
 
 /// cleans unwanted candidates
 void delineate::cleanUpCandidates(std::vector<candidate>& candids, std::vector<int>& indexCandidates) {
-	std::size_t i = 0;	
-	while(indexCandidates.size()) {
-		candids.erase(candids.begin() + indexCandidates.at(0) - i);
+	std::sort(indexCandidates.begin(), indexCandidates.end());
+	std::size_t i = 0;
+	while (indexCandidates.size()) {
+		int idx = indexCandidates.at(0) - static_cast<int>(i);
+		if (idx < 0 || idx >= static_cast<int>(candids.size())) {
+			indexCandidates.erase(indexCandidates.begin());
+			++i;
+			continue;
+		}
+		candids.erase(candids.begin() + idx);
 		indexCandidates.erase(indexCandidates.begin());
 		++i;
 	}

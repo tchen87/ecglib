@@ -12,28 +12,21 @@
 # FDA assumes no responsibility whatsoever for use by other parties of the Software, its source code, documentation or compiled executables, and makes no guarantees, expressed or implied, about its quality, reliability, or any other characteristic.  Further, FDA makes no representations that the use of the Software will not infringe any patent or proprietary rights of third parties.   The use of this code in no way implies endorsement by the FDA or confers any advantage in regulatory decisions.
 
 cmake_minimum_required(VERSION 2.8)
-
+project(ECGLib)
 ########################################################################################
 include_directories(src/core/)
 ########################################################################################
 # Detect compiler flags for C++11
-include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-if(COMPILER_SUPPORTS_CXX11)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-elseif(COMPILER_SUPPORTS_CXX0X)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -DARMA_DONT_USE_CXX11")
-else()
-        message(ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+# NEW - works on MSVC, GCC, and Clang
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# MSVC: fix __cplusplus macro reporting the correct value
+if(MSVC)
+    add_compile_options(/Zc:__cplusplus)
 endif()
 
-CHECK_CXX_COMPILER_FLAG("-ftrack-macro-expansion=0" COMPILER_NEEDS_DISABLEMACROEXPANSION)
-if(COMPILER_NEEDS_DISABLEMACROEXPANSION)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftrack-macro-expansion=0")
-else()
-	message("Compiler is ok with macros")
-endif()
 
 ########################################################################################
 # Determine version
@@ -118,8 +111,10 @@ else()
 	set(Boost_NO_SYSTEM_PATHS TRUE)
 endif()
 
-include(FindBoost)
-find_package(Boost COMPONENTS date_time filesystem system regex program_options iostreams serialization)
+set(BOOST_NO_WARN_NEW_VERSIONS ON)
+find_package(Boost COMPONENTS date_time filesystem regex iostreams serialization)
+
+
 
 if(Boost_FOUND)
 	message(STATUS "Boost_MAJOR_VERSION = ${Boost_MAJOR_VERSION}")
@@ -130,6 +125,7 @@ if(Boost_FOUND)
 	# FIXME Check version has fs3
 	include_directories(include ${Boost_INCLUDE_DIR})
 	set(ECGLIB_LIBRARIES "${ECGLIB_LIBRARIES};${Boost_LIBRARIES}" CACHE INTERNAL "ECGLIB LIBRARIES")
+	
 else()
 	message(FATAL_ERROR "Boost not found")
 endif()

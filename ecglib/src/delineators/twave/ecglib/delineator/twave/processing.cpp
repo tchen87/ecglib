@@ -274,15 +274,18 @@ std::vector<int> postProcessingRules::keepJustTwoPeaks(const std::vector<candida
 	postProcessingRules:: candidateSecondMax(candidsTMP, secondPeakAmplitude, secondPeakIndex);
 	candidsTMP.clear();
 
+	if (mainPeakIndex == -1) {
+		return indexPeakCandidates; // no peaks found, nothing to remove
+	}
 
-    	indexPeakCandidates.erase(indexPeakCandidates.begin() + mainPeakIndex); // remove mainPeakIndex
+    indexPeakCandidates.erase(indexPeakCandidates.begin() + mainPeakIndex); // remove mainPeakIndex
 
-        if (secondPeakIndex != -1){ // remove secondPeakIndex
-		if (secondPeakIndex > mainPeakIndex){
-			indexPeakCandidates.erase(indexPeakCandidates.begin() + secondPeakIndex - 1);
-		}else{
-			indexPeakCandidates.erase(indexPeakCandidates.begin() + secondPeakIndex);
-		}
+    if (secondPeakIndex != -1){ // remove secondPeakIndex
+	if (secondPeakIndex > mainPeakIndex){
+		indexPeakCandidates.erase(indexPeakCandidates.begin() + secondPeakIndex - 1);
+	}else{
+		indexPeakCandidates.erase(indexPeakCandidates.begin() + secondPeakIndex);
+	}
 	}
 	return indexPeakCandidates; // index peak candidates without index of main(first) & second peaks
 }

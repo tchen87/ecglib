@@ -672,13 +672,13 @@ namespace ecglib {
 	/**
 	* @brief Predicate function for if annotation in
 	*/
-	class annotationtype_in : public std::unary_function<annotation, bool> {
+	class annotationtype_in {
 		public:
 			annotationtype_in(const std::vector<annotation> &list) : _alist(list) {
 			}
 
 		public:
-			result_type operator()(argument_type in) {
+			bool operator()(annotation in) {
 				for(std::size_t i = 0; i < _alist.size(); ++i) {
 					if(_alist[i] == in) return true;
 				}

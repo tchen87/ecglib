@@ -31,7 +31,7 @@ ENDIF()
 if(UNIX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
-
+add_compile_definitions(BOOST_ALL_NO_LIB)
 if(WITH_STATIC)
 	add_library(${PROJECT_NAME}-static STATIC ${CODE_FILES})
 
