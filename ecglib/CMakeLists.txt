@@ -112,7 +112,7 @@ else()
 endif()
 
 set(BOOST_NO_WARN_NEW_VERSIONS ON)
-find_package(Boost COMPONENTS date_time filesystem regex iostreams serialization)
+find_package(Boost COMPONENTS program_options date_time filesystem regex iostreams serialization)
 
 
 
@@ -138,7 +138,8 @@ if(ARMADILLO_FOUND)
 	message(STATUS "Armadillo_MINOR_VERSION = ${ARMADILLO_VERSION_MINOR}")
 
 	include_directories(include ${ARMADILLO_INCLUDE_DIRS})
-	set(ECGLIB_LIBRARIES "${ECGLIB_LIBRARIES};${ARMADILLO_LIBRARY}" CACHE INTERNAL "ECGLIB LIBRARIES")
+	add_compile_definitions(ARMA_DONT_USE_WRAPPER)
+	#set(ECGLIB_LIBRARIES "${ECGLIB_LIBRARIES};${ARMADILLO_LIBRARY}" CACHE INTERNAL "ECGLIB LIBRARIES")
 else()
 	message(FATAL_ERROR "Armadillo not found")
 endif()
@@ -160,7 +161,7 @@ else()
 endif()
 
 if(WIN32)
-	set(ECGLIB_LIBRARIES "${ECGLIB_LIBRARIES};-lgfortran;-lblas;-llapack;-lquadmath;-lws2_32")
+	set(ECGLIB_LIBRARIES "${ECGLIB_LIBRARIES};ws2_32" CACHE INTERNAL "ECGLIB LIBRARIES")
 endif()
 
 ########################################################################################
